@@ -35,6 +35,7 @@ function nf_views_lite_get_ninja_form_fields( $form_id, $json_encode = true ) {
 			'fieldType' => $field->get_setting( 'type' ),
 			'type'      => $field->get_setting( 'type' ),
 			'values'    => $values,
+			'key'       => $field->get_setting( 'key' ),
 		);
 	}
 	if ( $json_encode ) {
@@ -77,7 +78,7 @@ function nf_views_lite_get_submissions( $args ) {
 				$query_args['meta_query'][ '_field_' . $sortfield['field'] . '_clause' ] = array(
 					'key' => '_field_' . $sortfield['field'],
 				);
-				$orderby[ '_field_' . $sortfield['field'] . '_clause' ]            = $sortfield['value'];
+				$orderby[ '_field_' . $sortfield['field'] . '_clause' ]                  = $sortfield['value'];
 			}
 		}
 		if ( ! empty( $orderby ) ) {
@@ -146,12 +147,12 @@ function nf_views_lite_get_submissions( $args ) {
 
 	 $subs = new WP_Query( $query_args );
 
-	$sub_objects = array();
+	$submissions = array();
 	if ( is_array( $subs->posts ) && ! empty( $subs->posts ) ) {
-
-		$sub_objects = $subs->posts;
+		$submissions['total_count'] = $subs->found_posts;
+		$submissions['subs']        = $subs->posts;
 	}
 
 	 wp_reset_postdata();
-	return $sub_objects;
+	return $submissions;
 }

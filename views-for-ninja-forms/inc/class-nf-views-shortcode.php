@@ -43,19 +43,11 @@ class NF_Views_Shortcode {
 		$loop_rows        = $view_settings->sections->loop->rows;
 		$after_loop_rows  = $view_settings->sections->afterloop->rows;
 
-		$submissions_count = 0;
-		$subs              = $wpdb->get_results( 'SELECT post_id FROM ' . $wpdb->postmeta . " WHERE `meta_key` = '_form_id' AND `meta_value` = $view_settings->formId" );
-		foreach ( $subs as $sub ) {
-			if ( 'publish' == get_post_status( $sub->post_id ) ) {
-				$submissions_count++;
-			}
-		}
-		$this->submissions_count = $submissions_count;
-		$this->form_fields       = nf_views_lite_get_ninja_form_fields( $view_settings->formId, false );
+		$this->form_fields = nf_views_lite_get_ninja_form_fields( $view_settings->formId, false );
 
-		$per_page = $view_settings->viewSettings->multipleentries->perPage;
+		$per_page   = $view_settings->viewSettings->multipleentries->perPage;
 		$sort_order = $view_settings->viewSettings->sort;
-		$args     = array(
+		$args       = array(
 			'form_id'        => $view_settings->formId,
 			'posts_per_page' => $per_page,
 		);
@@ -79,9 +71,12 @@ class NF_Views_Shortcode {
 			}
 		}
 
-		 $submissions = nf_views_lite_get_submissions( $args );
-		if ( empty( $submissions ) ) {
+		 $subs = nf_views_lite_get_submissions( $args );
+		if ( empty( $subs ) ) {
 			return '<div class="views-no-records-cnt">' . __( 'No records found.', 'views-for-ninja-forms' ) . '</div>';
+		} else {
+				$this->submissions_count = $subs['total_count'];
+				$submissions             = $subs['subs'];
 		}
 
 		$view_content = '';
@@ -275,6 +270,10 @@ class NF_Views_Shortcode {
 					$field_value  = '<div class="nf-view-field-value nf-view-field-type-sequenceNumber-value">';
 					$field_value .= $this->seq_no;
 					$field_value .= '</div>';
+				}elseif ( $form_field_id == 'entryDate' ) {
+						$date_format = get_option('date_format');
+						$time_format = get_option('time_format');
+						$field_value .=	 date( $date_format.' '.$time_format, strtotime( $sub->post_date ) );
 				}
 			}
 			$field_value = apply_filters( 'nfviews-field-value', $field_value, $field_id, $view_settings, $sub );

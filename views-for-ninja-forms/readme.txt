@@ -3,7 +3,7 @@ Contributors: aman086, webholics
 Tags: ninja forms, datatable, submissions, contact form
 Requires at least: 5.2
 Tested up to: 6.7
-Stable tag: 3.2
+Stable tag: 3.2.1
 License: GPLv2 or later
 
 Display Ninja Forms Submissions on your site frontend using drag &amp; drop View builder.
@@ -108,8 +108,12 @@ No, you can create as many views as you like &amp; use it anywhere on your site 
 3. Submissions shown in frontend.
 
 == Changelog ==
+3.2 (6th Jan 2025)
+New: Added Edit Form and View Entries in the View Settings.
+Fix: Fixed View styling if no Form is selected.
+
 3.2 (20th Nov 2024)
-Fix: Fxied an issue when deleting a Field from View can cause white screen if Field settings are opened.
+Fix: Fixed an issue when deleting a Field from View can cause white screen if Field settings are opened.
 
 3.1 (22nd Oct 2024)
 Fix: Resolved an issue where the View Settings tab became unclickable after selecting a field in the Editing view.
