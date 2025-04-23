@@ -39,3 +39,6 @@ body.nf-views_page_nf-views #nfooter,
 .post-type-nf-views .nf-footer-promotion {
 	display: none !important;
 }
+.single-entry-upgrade-msg a:hover {
+	color: #fff;
+}

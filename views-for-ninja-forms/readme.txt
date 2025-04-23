@@ -2,15 +2,15 @@
 Contributors: aman086, webholics
 Tags: ninja forms, datatable, submissions, contact form
 Requires at least: 5.2
-Tested up to: 6.7
-Stable tag: 3.2.1
+Tested up to: 6.8
+Stable tag: 3.2.2
 License: GPLv2 or later
 
 Display Ninja Forms Submissions on your site frontend using drag &amp; drop View builder.
 
 == Description ==
 
-Views for Ninja Forms lets you display Ninja Forms submissions in frontend of your site using drag &amp; drop View builder.
+Views for Ninja Forms (NFViews) lets you display Ninja Forms submissions in frontend of your site using drag &amp; drop View builder.
 You can create table view, list view or datatable view ([Pro feature](https://nfviews.com/pricing/?utm_source=wordpress-plugin-repo&amp;utm_medium=views-for-ninja-forms-lite-version-main-page&amp;utm_campaign=views-for-ninja-forms-lite-version)).
 It allows you add content before &amp; after the View.
 You can set number of ninja forms submissions to display per page inside View.
@@ -108,7 +108,10 @@ No, you can create as many views as you like &amp; use it anywhere on your site 
 3. Submissions shown in frontend.
 
 == Changelog ==
-3.2 (6th Jan 2025)
+3.2.2 (23rd April 2025)
+Fix: Fixed links colors in View edit page.
+
+3.2.1 (6th Jan 2025)
 New: Added Edit Form and View Entries in the View Settings.
 Fix: Fixed View styling if no Form is selected.
 
