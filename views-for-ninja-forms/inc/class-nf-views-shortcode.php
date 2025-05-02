@@ -205,11 +205,11 @@ class NF_Views_Shortcode {
 		$view_type     = $view_settings->viewType;
 		$field_html    = '';
 		if ( $view_type == 'table' ) {
-			$field_html .= '<td>';
+			$width       = ! empty( $field->fieldSettings->columnWidth ) ? $field->fieldSettings->columnWidth : 'auto';
+			$field_html .= '<td style="width:' . $width . '" >';
 		}
 
-		$width       = ! empty( $field->fieldSettings->columnWidth ) ? $field->fieldSettings->columnWidth : 'auto';
-		$field_html .= '<div  style="width:' . $width . '" class="nf-view-field-cont  field-' . $form_field_id . ' ' . $class . '">';
+		$field_html .= '<div  class="nf-view-field-cont  field-' . $form_field_id . ' ' . $class . '">';
 		// check if it's a form field
 		if ( ! empty( $sub ) && is_object( $sub ) ) {
 			// if view type is table then don't send label
@@ -243,11 +243,26 @@ class NF_Views_Shortcode {
 							}
 						}
 					} else {
-						if ( preg_match( '/(\.jpg|\.png|\.bmp|\.gif|\.jpeg)$/i', reset( $field_value ) ) ) {
-							$field_value = '<img src="' . reset( $field_value ) . '">';
+						// if ( preg_match( '/(\.jpg|\.png|\.bmp|\.gif|\.jpeg)$/i', reset( $field_value ) ) ) {
+						if ( isset( $fieldSettings->displayFileType ) && $fieldSettings->displayFileType == 'Image' ) {
+							$width = ! empty( $fieldSettings->imageWidth ) ? $fieldSettings->imageWidth : '100%';
+							$img_html  = '<img style="width:' . $width . '" class="nf-view-img" src="' . wp_strip_all_tags( reset( $field_value ) ) . '">';
+
+							if ( isset( $fieldSettings->onClickAction ) && $fieldSettings->onClickAction == 'newTab' ) {
+								$img_html = sprintf(
+									'<a href="%s" rel="noopener" target="_blank">%s</a>',
+									esc_url( reset( $field_value ) ),
+									$img_html
+								);
+							}
 						} else {
-							$field_value = '<a href="' . reset( $field_value ) . '">' . reset( $field_value ) . '</a>';
+							$img_html = sprintf(
+								'<a href="%s" rel="noopener" target="_blank">%s</a>',
+								esc_url( reset( $field_value ) ),
+								basename( reset( $field_value ) )
+							);
 						}
+						$field_value = $img_html;
 					}
 				} elseif ( $form_field_type == 'html' ) {
 					$field_value = $this->get_calculatons_for_html_field( $sub, $form_field_id );
@@ -270,10 +285,10 @@ class NF_Views_Shortcode {
 					$field_value  = '<div class="nf-view-field-value nf-view-field-type-sequenceNumber-value">';
 					$field_value .= $this->seq_no;
 					$field_value .= '</div>';
-				}elseif ( $form_field_id == 'entryDate' ) {
-						$date_format = get_option('date_format');
-						$time_format = get_option('time_format');
-						$field_value .=	 date( $date_format.' '.$time_format, strtotime( $sub->post_date ) );
+				} elseif ( $form_field_id == 'entryDate' ) {
+						$date_format  = get_option( 'date_format' );
+						$time_format  = get_option( 'time_format' );
+						$field_value .= date( $date_format . ' ' . $time_format, strtotime( $sub->post_date ) );
 				}
 			}
 			$field_value = apply_filters( 'nfviews-field-value', $field_value, $field_id, $view_settings, $sub );
