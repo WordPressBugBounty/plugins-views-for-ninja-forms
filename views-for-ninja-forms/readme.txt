@@ -3,7 +3,7 @@ Contributors: aman086, webholics
 Tags: ninja forms, datatable, submissions, contact form
 Requires at least: 5.2
 Tested up to: 6.8
-Stable tag: 3.2.4
+Stable tag: 3.2.5
 License: GPLv2 or later
 
 Display Ninja Forms Submissions on your site frontend using drag &amp; drop View builder.
@@ -108,6 +108,9 @@ No, you can create as many views as you like &amp; use it anywhere on your site 
 3. Submissions shown in frontend.
 
 == Changelog ==
+3.2.5 (16th Aug 2025)
+Added info about services.
+
 3.2.4 (6th July 2025)
 Added info about customizing field value output template available in pro version.
 
