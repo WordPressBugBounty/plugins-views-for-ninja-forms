@@ -3,7 +3,7 @@
  * Plugin Name: Views for Ninja Forms
  * Plugin URI: https://nfviews.com
  * Description: Display Ninja Forms Submissions on site frontend.
- * Version: 3.2.5
+ * Version: 3.2.6
  * Author: WebHolics
  * Author URI: https://nfviews.com
  * Text Domain: views-for-ninja-forms
@@ -36,7 +36,7 @@ define( 'NF_VIEWS_DIR_URL', WP_PLUGIN_DIR . '/' . basename( dirname( __FILE__ ) 
  add_action( 'plugins_loaded', 'nf_views_lite_include_files' );
 
 function nf_views_lite_include_files() {
-
+	require_once NF_VIEWS_DIR_URL . '/inc/class-nf-views-query-modifiers.php';
 	 require_once NF_VIEWS_DIR_URL . '/inc/helpers.php';
 
 	// Backend

@@ -4,6 +4,7 @@ function nf_views_lite_get_ninja_form_fields( $form_id, $json_encode = true ) {
 	if ( empty( $form_id ) ) {
 		return '{}';
 	}
+
 	$form_fields_obj = new stdClass();
 	$fields          = Ninja_Forms()->form( $form_id )->get_fields();
 	foreach ( $fields as $field ) {
@@ -64,16 +65,34 @@ function nf_views_lite_get_submissions( $args ) {
 			'inclusive' => true,
 		),
 	);
+	global $wpdb;
+	$join_string     = '';
+	$where_string    = '';
+	$orderby_string  = '';
+		$form_fields = nf_views_lite_get_ninja_form_fields( $args['form_id'], false );
 
-			// Sort
+	// Sort
 	if ( isset( $args['sort_order'] ) ) {
 		$orderby = array();
+
 		foreach ( $args['sort_order'] as $sortfield ) {
 			if ( $sortfield['field'] === 'submission_id' || $sortfield['field'] === 'entryId' ) {
-				$orderby['ID'] = $sortfield['value'];
-
+				if ( ! isset( $query_args['meta_query']['seq_num_clause'] ) ) {
+					$query_args['meta_query']['seq_num_clause'] = array(
+						'key'  => '_seq_num',
+						'type' => 'numeric',
+					);
+				}
+				$orderby['seq_num_clause'] = $sortfield['value'];
 			} elseif ( $sortfield['field'] === 'entryDate' ) {
 				$orderby['date'] = $sortfield['value'];
+			} elseif ( $form_fields->{$sortfield['field']}->type === 'date' ) {
+				$col_name     = 'snfv' . $sortfield['field'] . '.meta_value';
+				$join_string .= " LEFT JOIN {$wpdb->postmeta} AS snfv{$sortfield['field']} ON ( {$wpdb->posts}.ID = snfv{$sortfield['field']}.post_id AND snfv{$sortfield['field']}.meta_key='_field_{$sortfield['field']}')";
+
+				$date_col_string = nf_views_cast_to_mysql_date( $args['form_id'], $sortfield['field'], $col_name );
+				$orderby_string .= "$date_col_string " . $sortfield['value'];
+
 			} else {
 				$query_args['meta_query'][ '_field_' . $sortfield['field'] . '_clause' ] = array(
 					'key' => '_field_' . $sortfield['field'],
@@ -145,7 +164,19 @@ function nf_views_lite_get_submissions( $args ) {
 
 	 $query_args = apply_filters( 'nf_views_query_args', $query_args, $args );
 
-	 $subs = new WP_Query( $query_args );
+	if ( ! empty( $join_string ) ) {
+		NF_Views_Query_Modifiers()->set_join_string( $join_string );
+		NF_Views_Query_Modifiers()->set_orderby_string( $orderby_string );
+
+		add_filter( 'posts_join', array( 'NF_Views_Query_Modifiers', 'update_join' ) );
+		add_filter( 'posts_orderby', array( 'NF_Views_Query_Modifiers', 'update_orderby' ), 1 );
+	}
+	$subs = new WP_Query( $query_args );
+	// echo '<pre>'; print_r( $subs ); die;
+	if ( ! empty( $join_string ) ) {
+		remove_filter( 'posts_where', array( 'NF_Views_Query_Modifiers', 'update_join' ) );
+		remove_filter( 'posts_orderby', array( 'NF_Views_Query_Modifiers', 'update_orderby' ), 1 );
+	}
 
 	$submissions = array();
 	if ( is_array( $subs->posts ) && ! empty( $subs->posts ) ) {
@@ -155,4 +186,71 @@ function nf_views_lite_get_submissions( $args ) {
 
 	 wp_reset_postdata();
 	return $submissions;
+}
+
+
+
+
+function nf_views_get_mysql_date_string( $date_format ) {
+	$date_string = '';
+	switch ( $date_format ) {
+		case 'MM/DD/YYYY':
+		case 'm/d/Y':
+			$date_string = '%m/%d/%Y';
+			break;
+		case 'MM-DD-YYYY':
+		case 'm-d-Y':
+			$date_string = '%m-%d-%Y';
+			break;
+		case 'MM.DD.YYYY':
+		case 'm.d.Y':
+			$date_string = '%m.%d.%Y';
+			break;
+		case 'DD/MM/YYYY':
+		case 'd/m/Y':
+			$date_string = '%d/%m/%Y';
+			break;
+		case 'DD-MM-YYYY':
+		case 'd-m-Y':
+			$date_string = '%d-%m-%Y';
+			break;
+		case 'DD.MM.YYYY':
+		case 'd.m.Y':
+			$date_string = '%d.%m.%Y';
+			break;
+		case 'YYYY-MM-DD':
+		case 'Y-m-d':
+			$date_string = '%Y-%m-%d';
+			break;
+		case 'YYYY/MM/DD':
+		case 'Y/m/d':
+			$date_string = '%Y/%m/%d';
+			break;
+		case 'YYYY.MM.DD':
+		case 'Y.m.d':
+			$date_string = '%Y.%m.%d';
+			break;
+		case 'F j, Y':
+			$date_string = '%M %d, %Y';
+			break;
+		case 'dddd, MMMM D YYYY':
+		case 'l, F j, Y':
+			$date_string = '%W, %M %d %Y';
+			break;
+	}
+	return $date_string;
+}
+
+function nf_views_cast_to_mysql_date( $form_id, $field_id, $col_name ) {
+	$nf_field          = Ninja_Forms()->form( $form_id )->get_field( $field_id );
+	$field_date_format = $nf_field->get_setting( 'date_format' );
+
+	if ( $field_date_format === 'default' ) {
+		$field_date_format = get_option( 'date_format' );
+	}
+
+	$date_col_string  = "STR_TO_DATE($col_name, ";
+	$date_col_string .= "'" . nf_views_get_mysql_date_string( $field_date_format ) . "'";
+	$date_col_string .= ')';
+	return $date_col_string;
 }
