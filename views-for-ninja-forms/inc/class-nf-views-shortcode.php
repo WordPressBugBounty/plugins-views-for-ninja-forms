@@ -42,6 +42,7 @@ class NF_Views_Shortcode {
 		$before_loop_rows = $view_settings->sections->beforeloop->rows;
 		$loop_rows        = $view_settings->sections->loop->rows;
 		$after_loop_rows  = $view_settings->sections->afterloop->rows;
+		$norecords_text   = ! empty( $view_settings->viewSettings->multipleentries->noRecordsText ) ? $view_settings->viewSettings->multipleentries->noRecordsText : 'No records found';
 
 		$this->form_fields = nf_views_lite_get_ninja_form_fields( $view_settings->formId, false );
 
@@ -73,7 +74,8 @@ class NF_Views_Shortcode {
 
 		 $subs = nf_views_lite_get_submissions( $args );
 		if ( empty( $subs ) ) {
-			return '<div class="views-no-records-cnt">' . __( 'No records found.', 'views-for-ninja-forms' ) . '</div>';
+			return '<div class="views-no-records-cnt">' . esc_html_x( $norecords_text, 'Message shown when no records are found in table view', 'views-for-ninja-forms' ) . '</div>';
+			// return '<div class="views-no-records-cnt">' . __( 'No records found.', 'views-for-ninja-forms' ) . '</div>';
 		} else {
 				$this->submissions_count = $subs['total_count'];
 				$submissions             = $subs['subs'];
@@ -245,8 +247,8 @@ class NF_Views_Shortcode {
 					} else {
 						// if ( preg_match( '/(\.jpg|\.png|\.bmp|\.gif|\.jpeg)$/i', reset( $field_value ) ) ) {
 						if ( isset( $fieldSettings->displayFileType ) && $fieldSettings->displayFileType == 'Image' ) {
-							$width = ! empty( $fieldSettings->imageWidth ) ? $fieldSettings->imageWidth : '100%';
-							$img_html  = '<img style="width:' . $width . '" class="nf-view-img" src="' . wp_strip_all_tags( reset( $field_value ) ) . '">';
+							$width    = ! empty( $fieldSettings->imageWidth ) ? $fieldSettings->imageWidth : '100%';
+							$img_html = '<img style="width:' . $width . '" class="nf-view-img" src="' . wp_strip_all_tags( reset( $field_value ) ) . '">';
 
 							if ( isset( $fieldSettings->onClickAction ) && $fieldSettings->onClickAction == 'newTab' ) {
 								$img_html = sprintf(
