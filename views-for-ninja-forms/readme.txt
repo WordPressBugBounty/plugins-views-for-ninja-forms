@@ -17,7 +17,7 @@ You can set number of ninja forms submissions to display per page inside View.
 
 **Here is step by step guide to display entries from your Ninja Forms**
 
-[youtube https://www.youtube.com/watch?v=gyAFtnEDqbw]
+[youtube https://youtu.be/XqpDojpOFbI]
 
 == Demo ==
 [Table View](https://nfviews.com/docs/how-to-create-table-view-of-ninja-forms-entries/?utm_source=wordpress-plugin-repo&amp;utm_medium=views-for-ninja-forms-lite-version-main-page&amp;utm_campaign=views-for-ninja-forms-lite-version)
