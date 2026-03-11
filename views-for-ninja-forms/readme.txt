@@ -3,7 +3,7 @@ Contributors: aman086, webholics
 Tags: ninja forms, datatable, submissions, contact form
 Requires at least: 5.2
 Tested up to: 6.9
-Stable tag: 3.3.1
+Stable tag: 3.3.2
 License: GPLv2 or later
 
 Display Ninja Forms Submissions on your site frontend using drag &amp; drop View builder.
@@ -39,6 +39,7 @@ Get more features in [Pro version](https://nfviews.com/pricing/?utm_source=wordp
 * [DataTable View Format](https://nfviews.com/docs/how-to-create-a-datatable-view-of-ninja-forms-entries-in-frontend/?utm_source=wordpress-plugin-repo&amp;utm_medium=views-for-ninja-forms-lite-version-main-page&amp;utm_campaign=views-for-ninja-forms-lite-version)
 * [Display only approved submissions](https://nfviews.com/how-to-display-only-approved-ninja-forms-submissions-using-nfviews/)
 * [Edit submissions](https://nfviews.com/how-to-edit-ninja-forms-submissions-from-site-frontend/)
+* [25+ Premade Themes and Styler](https://nfviews.com/docs/how-to-design-style-your-ninja-forms-view/)
 * [Single Entry View](https://nfviews.com/docs/how-to-display-entry-details-on-single-page/) - Display Ninja Forms Entry details on Single Page.
 * [Display user only their submissions](https://nfviews.com/docs/how-to-display-only-user-submitted-entries-in-nfviews-2/)
 * Add Search Form above or at View bottom to filter/search submissions by field values.
@@ -55,6 +56,9 @@ Allow logged-in users to edit their entries from site frontend using the same fo
 
 = Delete Ninja Forms Entries =
 Allow users to delete their submitted entries from the site frontend. Logged-in users can delete their entries, administrators can delete any entry.
+
+= Premade themes & Custom Designs =
+Apply premade Table and List view themes with a single click. Choose from 25+ ready-made design templates, or create your own custom layouts without any CSS knowledge.
 
 = Search Ninja Forms Entries =
 Display Search Form in your View to allow users to filter view data by any field value. Options also include searching by Entry Submission Date or Date Range e.g. Display entries submitted between two dates.
@@ -108,7 +112,10 @@ No, you can create as many views as you like &amp; use it anywhere on your site 
 3. Submissions shown in frontend.
 
 == Changelog ==
-3.3 (9th Feb 2026)
+3.3.2 (11th March 2026)
+New: Added information about design themes
+
+3.3.1 (9th Feb 2026)
 Fix: Removed global styles form grids css.
 
 3.3 (3rd Feb 2026)

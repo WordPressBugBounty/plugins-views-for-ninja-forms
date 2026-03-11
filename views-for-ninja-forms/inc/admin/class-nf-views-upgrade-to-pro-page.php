@@ -425,6 +425,23 @@ class NF_Views_Upgrade_to_Pro_Page {
 					</div>
 				</div>
 
+								<div class="nfviews-pro-feature-cont">
+					<div class="nfviews-pro-feature">
+					<div class="license">
+							<span class="license-label">Personal</span>
+						</div>
+						<p class="icon"><i class="fa fa-html5 fa-2x"> </i></p>
+						<h5 class="feature-name">Custom Designs</h5>
+						<p class="feature-desc"> Apply ready-made themes with a single click. Customize table styles (borders, colors, headers, hover effects) without writing any CSS.</p>
+
+					<div class="actions">
+						<div class="action-button">
+							<a href="https://nfviews.com/docs/how-to-design-style-your-ninja-forms-view/?utm_source=wordpress-plugin-dashboard&utm_medium=wpforms-views-upgrade-page&utm_campaign=wpforms-views-lite-version" target="_blank" class="">Learn more</a>
+						</div>
+					</div>
+				</div>
+								</div>
+
 
 				<div class="nfviews-pro-feature-cont">
 					<div class="nfviews-pro-feature">
