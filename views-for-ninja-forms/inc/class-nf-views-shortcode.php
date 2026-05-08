@@ -65,8 +65,8 @@ class NF_Views_Shortcode {
 			foreach ( $sort_order as $sortrrow ) {
 				if ( isset( $sortrrow->field ) ) {
 					$args['sort_order'][] = array(
-						'field' => $sortrrow->field,
-						'value' => $sortrrow->value,
+						'field' => nf_views_lite_sanitize_sort_field( $sortrrow->field ),
+						'value' => nf_views_lite_sanitize_sort_direction( $sortrrow->value ),
 					);
 				}
 			}

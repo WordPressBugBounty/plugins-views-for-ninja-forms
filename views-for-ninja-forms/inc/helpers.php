@@ -47,6 +47,26 @@ function nf_views_lite_get_ninja_form_fields( $form_id, $json_encode = true ) {
 
 }
 
+function nf_views_lite_sanitize_sort_direction( $direction ) {
+	$direction = strtoupper( trim( (string) $direction ) );
+
+	if ( in_array( $direction, array( 'ASC', 'DESC' ), true ) ) {
+		return $direction;
+	}
+
+	return 'ASC';
+}
+
+function nf_views_lite_sanitize_sort_field( $field ) {
+	$field = (string) $field;
+
+	if ( in_array( $field, array( 'submission_id', 'entryId', 'entryDate' ), true ) ) {
+		return $field;
+	}
+
+	return (string) absint( $field );
+}
+
 
 /**
  * Get submissions based on specific critera.
@@ -76,28 +96,31 @@ function nf_views_lite_get_submissions( $args ) {
 		$orderby = array();
 
 		foreach ( $args['sort_order'] as $sortfield ) {
-			if ( $sortfield['field'] === 'submission_id' || $sortfield['field'] === 'entryId' ) {
+			$sort_field     = nf_views_lite_sanitize_sort_field( $sortfield['field'] );
+			$sort_direction = nf_views_lite_sanitize_sort_direction( $sortfield['value'] );
+
+			if ( $sort_field === 'submission_id' || $sort_field === 'entryId' ) {
 				if ( ! isset( $query_args['meta_query']['seq_num_clause'] ) ) {
 					$query_args['meta_query']['seq_num_clause'] = array(
 						'key'  => '_seq_num',
 						'type' => 'numeric',
 					);
 				}
-				$orderby['seq_num_clause'] = $sortfield['value'];
-			} elseif ( $sortfield['field'] === 'entryDate' ) {
-				$orderby['date'] = $sortfield['value'];
-			} elseif ( $form_fields->{$sortfield['field']}->type === 'date' ) {
-				$col_name     = 'snfv' . $sortfield['field'] . '.meta_value';
-				$join_string .= " LEFT JOIN {$wpdb->postmeta} AS snfv{$sortfield['field']} ON ( {$wpdb->posts}.ID = snfv{$sortfield['field']}.post_id AND snfv{$sortfield['field']}.meta_key='_field_{$sortfield['field']}')";
+				$orderby['seq_num_clause'] = $sort_direction;
+			} elseif ( $sort_field === 'entryDate' ) {
+				$orderby['date'] = $sort_direction;
+			} elseif ( ! empty( $sort_field ) && isset( $form_fields->{$sort_field} ) && $form_fields->{$sort_field}->type === 'date' ) {
+				$col_name     = 'snfv' . $sort_field . '.meta_value';
+				$join_string .= " LEFT JOIN {$wpdb->postmeta} AS snfv{$sort_field} ON ( {$wpdb->posts}.ID = snfv{$sort_field}.post_id AND snfv{$sort_field}.meta_key='_field_{$sort_field}')";
 
-				$date_col_string = nf_views_cast_to_mysql_date( $args['form_id'], $sortfield['field'], $col_name );
-				$orderby_string .= "$date_col_string " . $sortfield['value'];
+				$date_col_string = nf_views_cast_to_mysql_date( $args['form_id'], $sort_field, $col_name );
+				$orderby_string .= "$date_col_string " . $sort_direction;
 
 			} else {
-				$query_args['meta_query'][ '_field_' . $sortfield['field'] . '_clause' ] = array(
-					'key' => '_field_' . $sortfield['field'],
+				$query_args['meta_query'][ '_field_' . $sort_field . '_clause' ] = array(
+					'key' => '_field_' . $sort_field,
 				);
-				$orderby[ '_field_' . $sortfield['field'] . '_clause' ]                  = $sortfield['value'];
+				$orderby[ '_field_' . $sort_field . '_clause' ]                  = $sort_direction;
 			}
 		}
 		if ( ! empty( $orderby ) ) {
